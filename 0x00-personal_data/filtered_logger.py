@@ -38,6 +38,17 @@ class RedactingFormatter(logging.Formatter):
                             self.SEPARATOR)
 
 
+def filter_datum(fields: List[str],
+                 redaction: str,
+                 message: str,
+                 separator: str) -> str:
+    """ returns the log message obfuscated """
+    for i in fields:
+        message = re.sub(fr'{i}=.+?{separator}',
+                         f'{i}={redaction}{separator}', message)
+    return message
+
+
 def get_logger() -> logging.Logger:
     """
     return logging.Logger object
@@ -75,14 +86,3 @@ if __name__ == '__main__':
         print(string)
     cursor.close()
     connection.close()
-
-
-def filter_datum(fields: List[str],
-                 redaction: str,
-                 message: str,
-                 separator: str) -> str:
-    """ returns the log message obfuscated """
-    for i in fields:
-        message = re.sub(fr'{i}=.+?{separator}',
-                         f'{i}={redaction}{separator}', message)
-    return message
