@@ -39,7 +39,9 @@ class RedactingFormatter(logging.Formatter):
 
 
 def get_logger() -> logging.Logger:
-    """ return logging.Logger object """
+    """
+    return logging.Logger object
+    """
     obj = logging.getLogger("user_data")
     obj.setLevel(logging.INFO)
     obj.propagate = False
@@ -47,6 +49,18 @@ def get_logger() -> logging.Logger:
     handler.setFormatter(RedactingFormatter(list(PII_FIELDS)))
     obj.addHandler(handler)
     return obj
+
+
+def get_db() -> mysql.connector.connection.MySQLConnection:
+    """
+    Returns a connector to a database
+    """
+    connector = mysql.connector.connect(
+        user=os.environ.get("PERSONAL_DATA_DB_USERNAME", "root"),
+        password=os.environ.get("PERSONAL_DATA_DB_PASSWORD", ""),
+        host=os.environ.get("PERSONAL_DATA_DB_HOST", "localhost"),
+        database=os.environ.get("PERSONAL_DATA_DB_NAME"))
+    return connector
 
 
 def filter_datum(fields: List[str],
