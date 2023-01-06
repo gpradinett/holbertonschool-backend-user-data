@@ -65,16 +65,13 @@ def get_logger() -> logging.Logger:
 
 
 def get_db() -> mysql.connector.connection.MySQLConnection:
-    """
-    Returns a connector to a mysql database
-    """
-    db_connection = mysql.connector.connection.MySQLConnection(
-        user=getenv('PERSONAL_DATA_DB_USERNAME', 'root'),
-        password=getenv('PERSONAL_DATA_DB_PASSWORD', ''),
-        host=getenv('PERSONAL_DATA_DB_HOST', 'localhost'),
-        database=getenv('PERSONAL_DATA_DB_NAME'))
-
-    return db_connection
+    """Returns a connector to a database"""
+    connector = mysql.connector.connect(
+        user=os.environ.get("PERSONAL_DATA_DB_USERNAME", "root"),
+        password=os.environ.get("PERSONAL_DATA_DB_PASSWORD", ""),
+        host=os.environ.get("PERSONAL_DATA_DB_HOST", "localhost"),
+        database=os.environ.get("PERSONAL_DATA_DB_NAME"))
+    return connector
 
 
 if __name__ == '__main__':
