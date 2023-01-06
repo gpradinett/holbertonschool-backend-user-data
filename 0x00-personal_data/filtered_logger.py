@@ -63,6 +63,20 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
     return connector
 
 
+if __name__ == '__main__':
+    connection = get_db()
+    cursor = connection.cursor(dictionary=True)
+    query = ("SELECT * FROM users")
+    cursor.execute(query)
+    for row in cursor:
+        string = ""
+        for key in row:
+            string += "{}={}; ".format(key, row[key])
+        print(string)
+    cursor.close()
+    connection.close()
+
+
 def filter_datum(fields: List[str],
                  redaction: str,
                  message: str,
