@@ -1,6 +1,10 @@
 #!/usr/bin/python3
+"""
+3. Auth class
+"""
 
-import request from flask
+from flask import request
+from typing import List, TypeVar
 
 
 class Auth:
