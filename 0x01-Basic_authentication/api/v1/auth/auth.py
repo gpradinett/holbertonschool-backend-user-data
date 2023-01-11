@@ -1,13 +1,12 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 """
 3. Auth class
 """
-
 from flask import request
 from typing import List, TypeVar
 
 
-class Auth:
+class Auth():
     """
     Auth class
     """
