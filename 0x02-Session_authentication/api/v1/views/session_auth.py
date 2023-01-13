@@ -8,7 +8,7 @@ from models.user import User
 from os import getenv
 
 
-@app.views.route('/auth_session/login', methods=['POST'], strict_slashes=False)
+@app_views.route('/auth_session/login', methods=['POST'], strict_slashes=False)
 def login_session():
     """
 
@@ -39,7 +39,7 @@ def login_session():
             return jsonify(error="wrong password"), 401
     return jsonify(error="no user found for this email"), 404
 
- @app_views.route('/auth_session/logout', methods=['DELETE'],
+@app_views.route('/auth_session/logout', methods=['DELETE'],
                  strict_slashes=False)
 def logout():
     """ 
