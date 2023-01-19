@@ -9,7 +9,9 @@ from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
+
 class User(Base):
+    """ user class MB model """
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True)
