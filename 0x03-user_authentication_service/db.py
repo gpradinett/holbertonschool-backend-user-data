@@ -46,18 +46,15 @@ class DB:
 
     def find_user_by(self, **kwargs) -> User:
         """
-
+        function that finds a created user
+        using a argument
         """
-        if kwargs is None:
+        try:
+            user_filter = self._session.query(User).filter_by(**kwargs).first()
+        except TypeError:
             raise InvalidRequestError
 
-        for i in kwargs.keys():
-            if i not in User.__table__.columns.keys():
-                raise InvalidRequestError
-
-        user = self._session.query(User).filter_by(**kwargs).first()
-
-        if user is None:
+        if user_filter is None:
             raise NoResultFound
 
-        return user
+        return user_filter
