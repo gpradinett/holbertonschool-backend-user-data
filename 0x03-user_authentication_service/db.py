@@ -8,8 +8,6 @@ from sqlalchemy.orm.session import Session
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.orm.exc import NoResultFound
 
-from typing import TypeVar, Any
-
 from user import Base, User
 
 
@@ -20,7 +18,7 @@ class DB:
     def __init__(self) -> None:
         """Initialize a new DB instance
         """
-        self._engine = create_engine("sqlite:///a.db", echo=True)
+        self._engine = create_engine("sqlite:///a.db")
         Base.metadata.drop_all(self._engine)
         Base.metadata.create_all(self._engine)
         self.__session = None
@@ -36,18 +34,20 @@ class DB:
 
     def add_user(self, email: str, hashed_password: str) -> User:
         """
-        adds and returns a new user Object
+        method which has two required string arguments:
+        email and hashed_password, and returns a User object
         """
-        user = User(email=email, hashed_password=hashed_password)
-        session = self._session
-        session.add(user)
-        session.commit()
-        return user
+        new_user = User(email=email, hashed_password=hashed_password)
+        self._session.add(new_user)
+        self._session.commit()
+
+        return new_user
 
     def find_user_by(self, **kwargs) -> User:
         """
-        function that finds a created user
-        using a argument
+        method takes in arbitrary keyword arguments and returns
+        the first row found in the users table as filtered by
+        the method’s input arguments
         """
         try:
             user_filter = self._session.query(User).filter_by(**kwargs).first()
@@ -58,3 +58,19 @@ class DB:
             raise NoResultFound
 
         return user_filter
+
+    def update_user(self, user_id: int, **kwargs) -> None:
+        """
+        method will use find_user_by to locate the user to update,
+        then will update the user’s attributes as passed in the method’s
+        arguments then commit changes to the database
+        """
+        user = self.find_user_by(id=user_id)
+        names_columns = User.__table__.columns.keys()
+
+        for key in kwargs.keys():
+            if key not in names_columns:
+                raise ValueError
+
+        for key, value in kwargs.items():
+            setattr(user, key, value)
