@@ -38,10 +38,26 @@ class DB:
         """
         adds and returns a new user Object
         """
-        if not email or not hashed_password:
-            return
         user = User(email=email, hashed_password=hashed_password)
         session = self._session
         session.add(user)
         session.commit()
+        return user
+
+    def find_user_by(self, **kwargs) -> User:
+        """
+
+        """
+        if kwargs is None:
+            raise InvalidRequestError
+
+        for i in kwargs.keys():
+            if i not in User.__table__.columns.keys():
+                raise InvalidRequestError
+
+        user = self._session.query(User).filter_by(**kwargs).first()
+
+        if user is None:
+            raise NoResultFound
+
         return user
