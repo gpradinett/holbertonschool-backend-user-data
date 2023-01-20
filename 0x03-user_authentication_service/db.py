@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""DB module
+"""
+DB module
 """
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
@@ -14,9 +15,9 @@ from user import Base, User
 class DB:
     """DB class
     """
-
     def __init__(self) -> None:
-        """Initialize a new DB instance
+        """
+        Constructor
         """
         self._engine = create_engine("sqlite:///a.db")
         Base.metadata.drop_all(self._engine)
@@ -25,7 +26,8 @@ class DB:
 
     @property
     def _session(self) -> Session:
-        """Memoized session object
+        """
+        sesión
         """
         if self.__session is None:
             DBSession = sessionmaker(bind=self._engine)
@@ -34,8 +36,7 @@ class DB:
 
     def add_user(self, email: str, hashed_password: str) -> User:
         """
-        method which has two required string arguments:
-        email and hashed_password, and returns a User object
+        adds and returns a new user Object
         """
         new_user = User(email=email, hashed_password=hashed_password)
         self._session.add(new_user)
@@ -45,9 +46,8 @@ class DB:
 
     def find_user_by(self, **kwargs) -> User:
         """
-        method takes in arbitrary keyword arguments and returns
-        the first row found in the users table as filtered by
-        the method’s input arguments
+        function that finds a created user
+        using a argument
         """
         try:
             user_filter = self._session.query(User).filter_by(**kwargs).first()
@@ -61,9 +61,7 @@ class DB:
 
     def update_user(self, user_id: int, **kwargs) -> None:
         """
-        method will use find_user_by to locate the user to update,
-        then will update the user’s attributes as passed in the method’s
-        arguments then commit changes to the database
+        update properties of an user
         """
         user = self.find_user_by(id=user_id)
         names_columns = User.__table__.columns.keys()
